@@ -58,6 +58,28 @@ class ListingModel {
     };
   }
 
+  // maps the listing category to an emoji icon used across the UI
+  String get categoryEmoji {
+    switch (category) {
+      case 'Café':
+        return '☕';
+      case 'Hospital':
+        return '🏥';
+      case 'Park':
+        return '🌿';
+      case 'Restaurant':
+        return '🍽';
+      case 'Police Station':
+        return '🚓';
+      case 'Library':
+        return '📚';
+      case 'Tourist Attraction':
+        return '🏛';
+      default:
+        return '📍';
+    }
+  }
+
   // used when editing a listing
   ListingModel copyWith({
     String? id,

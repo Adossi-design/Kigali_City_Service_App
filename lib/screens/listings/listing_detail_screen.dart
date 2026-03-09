@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,31 +8,9 @@ import '../../theme/app_theme.dart';
 import '../reviews/add_review_screen.dart';
 
 // detail screen for a single listing
-class ListingDetailScreen extends ConsumerWidget {
+class ListingDetailScreen extends StatelessWidget {
   final ListingModel listing;
   const ListingDetailScreen({super.key, required this.listing});
-
-  // returns the right emoji based on the listing category
-  String get categoryEmoji {
-    switch (listing.category) {
-      case 'Café':
-        return '☕';
-      case 'Hospital':
-        return '🏥';
-      case 'Park':
-        return '🌿';
-      case 'Restaurant':
-        return '🍽';
-      case 'Police Station':
-        return '🚓';
-      case 'Library':
-        return '📚';
-      case 'Tourist Attraction':
-        return '🏛';
-      default:
-        return '📍';
-    }
-  }
 
   // opens Google Maps with directions to this listing's coordinates
   Future<void> _launchNavigation() async {
@@ -46,7 +23,7 @@ class ListingDetailScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -61,7 +38,7 @@ class ListingDetailScreen extends ConsumerWidget {
                 onTap: () => Navigator.pop(context),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme.navyCard.withOpacity(0.9),
+                    color: AppTheme.navyCard.withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.arrow_back,
@@ -79,8 +56,8 @@ class ListingDetailScreen extends ConsumerWidget {
                   ),
                 ),
                 child: Center(
-                  child:
-                      Text(categoryEmoji, style: const TextStyle(fontSize: 64)),
+                  child: Text(listing.categoryEmoji,
+                      style: const TextStyle(fontSize: 64)),
                 ),
               ),
             ),
@@ -105,11 +82,11 @@ class ListingDetailScreen extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppTheme.gold.withOpacity(0.15),
+                      color: AppTheme.gold.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '$categoryEmoji ${listing.category}',
+                      '${listing.categoryEmoji} ${listing.category}',
                       style: GoogleFonts.dmSans(
                         color: AppTheme.gold,
                         fontSize: 12,
@@ -220,8 +197,8 @@ class ListingDetailScreen extends ConsumerWidget {
                       // calculates average rating from all reviews
                       final avgRating = reviews.fold(
                               0.0,
-                              (sum, doc) =>
-                                  sum + (doc['rating'] as num).toDouble()) /
+                              (total, doc) =>
+                                  total + (doc['rating'] as num).toDouble()) /
                           reviews.length;
 
                       return Column(
@@ -281,7 +258,7 @@ class ListingDetailScreen extends ConsumerWidget {
                                             height: 32,
                                             decoration: BoxDecoration(
                                               color: AppTheme.gold
-                                                  .withOpacity(0.15),
+                                                  .withValues(alpha: 0.15),
                                               borderRadius:
                                                   BorderRadius.circular(16),
                                             ),

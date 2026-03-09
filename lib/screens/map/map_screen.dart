@@ -17,7 +17,6 @@ class MapScreen extends ConsumerStatefulWidget {
 }
 
 class _MapScreenState extends ConsumerState<MapScreen> {
-  GoogleMapController? _mapController;
   ListingModel? _selectedListing;
 
   // Kigali center
@@ -68,7 +67,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                           zoom: 13,
                         ),
                         markers: _buildMarkers(filtered),
-                        onMapCreated: (c) => _mapController = c,
                         mapType: MapType.normal,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
@@ -84,7 +82,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
                 decoration: BoxDecoration(
-                  color: AppTheme.navy.withOpacity(0.95),
+                  color: AppTheme.navy.withValues(alpha: 0.95),
                   border: const Border(
                     bottom: BorderSide(color: AppTheme.navyBorder),
                   ),
@@ -106,7 +104,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
                 decoration: BoxDecoration(
-                  color: AppTheme.navy.withOpacity(0.97),
+                  color: AppTheme.navy.withValues(alpha: 0.97),
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(20)),
                   border:

@@ -50,28 +50,6 @@ class ListingCard extends StatelessWidget {
 
   const ListingCard({super.key, required this.listing, required this.onTap});
 
-  // maps category name to an emoji icon
-  String get categoryEmoji {
-    switch (listing.category) {
-      case 'Café':
-        return '☕';
-      case 'Hospital':
-        return '🏥';
-      case 'Park':
-        return '🌿';
-      case 'Restaurant':
-        return '🍽';
-      case 'Police Station':
-        return '🚓';
-      case 'Library':
-        return '📚';
-      case 'Tourist Attraction':
-        return '🏛';
-      default:
-        return '📍';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -99,8 +77,8 @@ class ListingCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child:
-                    Text(categoryEmoji, style: const TextStyle(fontSize: 22)),
+                child: Text(listing.categoryEmoji,
+                    style: const TextStyle(fontSize: 22)),
               ),
             ),
             const SizedBox(width: 14),
@@ -130,21 +108,13 @@ class ListingCard extends StatelessWidget {
                 ],
               ),
             ),
-            // star rating and category label on the right
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const Text('★★★★☆',
-                    style: TextStyle(color: AppTheme.gold, fontSize: 11)),
-                const SizedBox(height: 3),
-                Text(
-                  listing.category,
-                  style: GoogleFonts.dmSans(
-                    fontSize: 11,
-                    color: AppTheme.muted,
-                  ),
-                ),
-              ],
+            // category label on the right
+            Text(
+              listing.category,
+              style: GoogleFonts.dmSans(
+                fontSize: 11,
+                color: AppTheme.muted,
+              ),
             ),
           ],
         ),

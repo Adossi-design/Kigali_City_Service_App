@@ -58,7 +58,7 @@ class ReviewsScreen extends StatelessWidget {
                   final reviews = snapshot.data!.docs;
                   final avgRating = reviews.fold(
                         0.0,
-                        (sum, doc) => sum + (doc['rating'] as num).toDouble(),
+                        (total, doc) => total + (doc['rating'] as num).toDouble(),
                       ) /
                       reviews.length;
 
@@ -75,7 +75,7 @@ class ReviewsScreen extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: AppTheme.gold.withOpacity(0.3),
+                            color: AppTheme.gold.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -124,7 +124,6 @@ class ReviewsScreen extends StatelessWidget {
                         final rating = (data['rating'] as num).toDouble();
                         final name = data['userName'] ?? 'Anonymous';
                         final comment = data['comment'] ?? '';
-                        final listingId = data['listingId'] ?? '';
 
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
@@ -149,7 +148,7 @@ class ReviewsScreen extends StatelessWidget {
                                         height: 36,
                                         decoration: BoxDecoration(
                                           color:
-                                              AppTheme.gold.withOpacity(0.15),
+                                              AppTheme.gold.withValues(alpha: 0.15),
                                           borderRadius:
                                               BorderRadius.circular(18),
                                         ),
@@ -199,42 +198,30 @@ class ReviewsScreen extends StatelessWidget {
 
                               const SizedBox(height: 8),
 
-                              // Listing name tag
-                              FutureBuilder<DocumentSnapshot>(
-                                future: FirebaseFirestore.instance
-                                    .collection('listings')
-                                    .doc(listingId)
-                                    .get(),
-                                builder: (context, listingSnap) {
-                                  if (!listingSnap.hasData) {
-                                    return const SizedBox();
-                                  }
-                                  final listingData = listingSnap.data!.data()
-                                      as Map<String, dynamic>?;
-                                  final listingName =
-                                      listingData?['name'] ?? 'Unknown place';
-                                  final category =
-                                      listingData?['category'] ?? '';
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.navy,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                          color: AppTheme.navyBorder),
+                              // Listing name tag (stored on the review)
+                              Builder(builder: (context) {
+                                final listingName =
+                                    data['listingName'] ?? 'Unknown place';
+                                final category = data['listingCategory'] ?? '';
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.navy,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border:
+                                        Border.all(color: AppTheme.navyBorder),
+                                  ),
+                                  child: Text(
+                                    '📍 $listingName · $category',
+                                    style: GoogleFonts.dmSans(
+                                      color: AppTheme.muted,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    child: Text(
-                                      '📍 $listingName · $category',
-                                      style: GoogleFonts.dmSans(
-                                        color: AppTheme.muted,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              }),
 
                               const SizedBox(height: 8),
 

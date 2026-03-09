@@ -27,12 +27,16 @@ class AuthService {
     await credential.user?.sendEmailVerification();
 
     // Create user profile in Firestore
-    await _firestore.collection('users').doc(credential.user!.uid).set({
-      'name': name,
-      'email': email,
-      'emailVerified': false,
-      'createdAt': Timestamp.now(),
-    });
+    final profile = UserModel(
+      uid: credential.user!.uid,
+      name: name,
+      email: email,
+      emailVerified: false,
+      createdAt: DateTime.now(),
+    );
+    await _firestore.collection('users').doc(profile.uid).set(
+          profile.toFirestore(),
+        );
 
     return credential;
   }
@@ -69,17 +73,15 @@ class AuthService {
     await _auth.currentUser?.sendEmailVerification();
   }
 
+  // Send a password reset email
+  Future<void> sendPasswordReset(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
+  }
+
   // Get user profile from Firestore
   Future<UserModel?> getUserProfile(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
     if (doc.exists) return UserModel.fromFirestore(doc);
     return null;
-  }
-
-  // Update email verified status
-  Future<void> updateEmailVerified(String uid) async {
-    await _firestore.collection('users').doc(uid).update({
-      'emailVerified': true,
-    });
   }
 }

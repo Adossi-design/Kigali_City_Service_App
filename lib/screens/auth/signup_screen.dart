@@ -133,9 +133,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.red.withOpacity(0.1),
+                      color: AppTheme.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppTheme.red.withOpacity(0.3)),
+                      border: Border.all(color: AppTheme.red.withValues(alpha: 0.3)),
                     ),
                     child: Text(_errorMessage!,
                         style: GoogleFonts.dmSans(

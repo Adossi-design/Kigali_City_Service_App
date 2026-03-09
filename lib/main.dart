@@ -121,7 +121,7 @@ class EmailVerificationScreen extends ConsumerWidget {
               // allows user to go back to login screen
               TextButton(
                 onPressed: () => ref.read(authServiceProvider).signOut(),
-                child: Text(
+                child: const Text(
                   'Sign Out',
                   style: TextStyle(color: AppTheme.muted),
                 ),

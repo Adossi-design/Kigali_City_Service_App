@@ -84,29 +84,43 @@ class SettingsScreen extends ConsumerWidget {
                                 color: AppTheme.muted, fontSize: 13),
                           ),
                           const SizedBox(height: 10),
-                          // email verified badge
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: AppTheme.green.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.verified,
-                                    color: AppTheme.green, size: 14),
-                                const SizedBox(width: 5),
-                                Text('Email Verified',
+                          // email verified badge — reflects the real status
+                          Builder(builder: (context) {
+                            final verified = authUser?.emailVerified ?? false;
+                            final badgeColor =
+                                verified ? AppTheme.green : AppTheme.muted;
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: badgeColor.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    verified
+                                        ? Icons.verified
+                                        : Icons.error_outline,
+                                    color: badgeColor,
+                                    size: 14,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    verified
+                                        ? 'Email Verified'
+                                        : 'Email Not Verified',
                                     style: GoogleFonts.dmSans(
-                                      color: AppTheme.green,
+                                      color: badgeColor,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                    )),
-                              ],
-                            ),
-                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -160,13 +174,23 @@ class SettingsScreen extends ConsumerWidget {
                     _settingsItem(
                       emoji: '🔑',
                       title: 'Change Password',
-                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Password reset email sent!',
-                              style: GoogleFonts.dmSans()),
-                          backgroundColor: AppTheme.green,
-                        ),
-                      ),
+                      onTap: () async {
+                        final email = authUser?.email;
+                        if (email == null) return;
+                        await ref
+                            .read(authServiceProvider)
+                            .sendPasswordReset(email);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Password reset email sent to $email',
+                                  style: GoogleFonts.dmSans()),
+                              backgroundColor: AppTheme.green,
+                            ),
+                          );
+                        }
+                      },
                     ),
 
                     const SizedBox(height: 8),
@@ -179,10 +203,10 @@ class SettingsScreen extends ConsumerWidget {
                       child: Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: AppTheme.red.withOpacity(0.08),
+                          color: AppTheme.red.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(12),
                           border:
-                              Border.all(color: AppTheme.red.withOpacity(0.2)),
+                              Border.all(color: AppTheme.red.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           children: [
@@ -251,7 +275,7 @@ class SettingsScreen extends ConsumerWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppTheme.gold,
+            activeThumbColor: AppTheme.gold,
             inactiveThumbColor: AppTheme.muted,
             inactiveTrackColor: AppTheme.navyBorder,
           ),

@@ -21,7 +21,6 @@ class AppTheme {
         primary: gold,
         secondary: goldLight,
         surface: navyCard,
-        background: navy,
         error: red,
       ),
       textTheme: GoogleFonts.dmSansTextTheme(

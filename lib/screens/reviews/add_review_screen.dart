@@ -66,6 +66,8 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
       // saves the review document to the reviews collection
       await FirebaseFirestore.instance.collection('reviews').add({
         'listingId': widget.listing.id,
+        'listingName': widget.listing.name,
+        'listingCategory': widget.listing.category,
         'userId': user.uid,
         'userName': userName,
         'comment': _commentController.text.trim(),
@@ -81,7 +83,8 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e', style: GoogleFonts.dmSans()),
+            content: Text('Could not submit your review. Please try again.',
+                style: GoogleFonts.dmSans()),
             backgroundColor: AppTheme.red,
           ),
         );

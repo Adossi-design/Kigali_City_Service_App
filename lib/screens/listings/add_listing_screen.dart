@@ -59,7 +59,10 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
     setState(() => _isLoading = true);
 
     final authState = ref.read(authStateProvider).value;
-    if (authState == null) return;
+    if (authState == null) {
+      setState(() => _isLoading = false);
+      return;
+    }
 
     try {
       final listing = ListingModel(
@@ -99,7 +102,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving listing: $e',
+            content: Text('Could not save the listing. Please try again.',
                 style: GoogleFonts.dmSans()),
             backgroundColor: AppTheme.red,
           ),

@@ -42,30 +42,30 @@ class _HomeShellState extends State<HomeShell> {
           currentIndex: _currentIndex,
           onTap: (i) => setState(() => _currentIndex = i),
           // 5 tab items with emoji icons
-          items: [
+          items: const [
             BottomNavigationBarItem(
-              icon: const Text('🏠', style: TextStyle(fontSize: 22)),
-              activeIcon: const Text('🏠', style: TextStyle(fontSize: 24)),
+              icon: Text('🏠', style: TextStyle(fontSize: 22)),
+              activeIcon: Text('🏠', style: TextStyle(fontSize: 24)),
               label: 'Directory',
             ),
             BottomNavigationBarItem(
-              icon: const Text('📋', style: TextStyle(fontSize: 22)),
-              activeIcon: const Text('📋', style: TextStyle(fontSize: 24)),
+              icon: Text('📋', style: TextStyle(fontSize: 22)),
+              activeIcon: Text('📋', style: TextStyle(fontSize: 24)),
               label: 'My Listings',
             ),
             BottomNavigationBarItem(
-              icon: const Text('⭐', style: TextStyle(fontSize: 22)),
-              activeIcon: const Text('⭐', style: TextStyle(fontSize: 24)),
+              icon: Text('⭐', style: TextStyle(fontSize: 22)),
+              activeIcon: Text('⭐', style: TextStyle(fontSize: 24)),
               label: 'Reviews',
             ),
             BottomNavigationBarItem(
-              icon: const Text('🗺', style: TextStyle(fontSize: 22)),
-              activeIcon: const Text('🗺', style: TextStyle(fontSize: 24)),
+              icon: Text('🗺', style: TextStyle(fontSize: 22)),
+              activeIcon: Text('🗺', style: TextStyle(fontSize: 24)),
               label: 'Map View',
             ),
             BottomNavigationBarItem(
-              icon: const Text('⚙️', style: TextStyle(fontSize: 22)),
-              activeIcon: const Text('⚙️', style: TextStyle(fontSize: 24)),
+              icon: Text('⚙️', style: TextStyle(fontSize: 22)),
+              activeIcon: Text('⚙️', style: TextStyle(fontSize: 24)),
               label: 'Settings',
             ),
           ],
