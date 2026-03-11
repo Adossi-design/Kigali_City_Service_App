@@ -3,11 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_theme.dart';
 import 'directory_screen.dart';
 import '../listings/my_listings_screen.dart';
+import '../listings/saved_listings_screen.dart';
 import '../map/map_screen.dart';
 import '../settings/settings_screen.dart';
 import '../reviews/reviews_screen.dart';
 
-// main shell that holds all 5 tabs and the bottom navigation bar
+// main shell that holds all tabs and the bottom navigation bar
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
 
@@ -18,10 +19,11 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   int _currentIndex = 0;
 
-  // all 5 screens loaded at once using IndexedStack
+  // all screens loaded at once using IndexedStack
   final List<Widget> _screens = const [
     DirectoryScreen(),
     MyListingsScreen(),
+    SavedListingsScreen(),
     ReviewsScreen(),
     MapScreen(),
     SettingsScreen(),
@@ -41,7 +43,7 @@ class _HomeShellState extends State<HomeShell> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (i) => setState(() => _currentIndex = i),
-          // 5 tab items with emoji icons
+          // tab items with emoji icons
           items: const [
             BottomNavigationBarItem(
               icon: Text('🏠', style: TextStyle(fontSize: 22)),
@@ -51,7 +53,12 @@ class _HomeShellState extends State<HomeShell> {
             BottomNavigationBarItem(
               icon: Text('📋', style: TextStyle(fontSize: 22)),
               activeIcon: Text('📋', style: TextStyle(fontSize: 24)),
-              label: 'My Listings',
+              label: 'Listings',
+            ),
+            BottomNavigationBarItem(
+              icon: Text('🔖', style: TextStyle(fontSize: 22)),
+              activeIcon: Text('🔖', style: TextStyle(fontSize: 24)),
+              label: 'Saved',
             ),
             BottomNavigationBarItem(
               icon: Text('⭐', style: TextStyle(fontSize: 22)),
@@ -61,7 +68,7 @@ class _HomeShellState extends State<HomeShell> {
             BottomNavigationBarItem(
               icon: Text('🗺', style: TextStyle(fontSize: 22)),
               activeIcon: Text('🗺', style: TextStyle(fontSize: 24)),
-              label: 'Map View',
+              label: 'Map',
             ),
             BottomNavigationBarItem(
               icon: Text('⚙️', style: TextStyle(fontSize: 22)),
