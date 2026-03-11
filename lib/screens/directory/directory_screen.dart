@@ -5,6 +5,7 @@ import '../../providers/providers.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common_widgets.dart';
 import '../listings/listing_detail_screen.dart';
+import '../listings/saved_listings_screen.dart';
 
 // list of all available categories for filtering
 const List<String> kCategories = [
@@ -51,6 +52,25 @@ class DirectoryScreen extends ConsumerWidget {
                             color: AppTheme.white,
                           )),
                     ],
+                  ),
+                  // shortcut to the user's saved listings
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SavedListingsScreen(),
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppTheme.navyCard,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.navyBorder),
+                      ),
+                      child: const Icon(Icons.bookmark_border,
+                          color: AppTheme.gold, size: 20),
+                    ),
                   ),
                 ],
               ),

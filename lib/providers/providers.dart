@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 import '../services/listing_service.dart';
+import '../services/bookmark_service.dart';
 import '../models/listing_model.dart';
 import '../models/user_model.dart';
 
@@ -80,3 +81,39 @@ final filteredListingsProvider =
 // Notification Preferences — controls toggle switches in settings screen
 final locationNotificationsProvider = StateProvider<bool>((ref) => true);
 final listingUpdatesNotificationsProvider = StateProvider<bool>((ref) => false);
+
+// Bookmark Providers — creates a single instance of the bookmark service
+final bookmarkServiceProvider =
+    Provider<BookmarkService>((ref) => BookmarkService());
+
+// streams the ids of listings the current user has saved
+final bookmarkedIdsProvider = StreamProvider<Set<String>>((ref) {
+  final authState = ref.watch(authStateProvider);
+  return authState.when(
+    data: (user) {
+      if (user == null) return Stream.value(const <String>{});
+      return ref
+          .watch(bookmarkServiceProvider)
+          .getBookmarkedListingIds(user.uid);
+    },
+    loading: () => Stream.value(const <String>{}),
+    error: (_, __) => Stream.value(const <String>{}),
+  );
+});
+
+// derives the full saved listings from the bookmarked ids and all listings
+final bookmarkedListingsProvider =
+    Provider<AsyncValue<List<ListingModel>>>((ref) {
+  final allListings = ref.watch(allListingsProvider);
+  final ids = ref.watch(bookmarkedIdsProvider);
+  return allListings.when(
+    data: (listings) => ids.when(
+      data: (idSet) => AsyncValue.data(
+          listings.where((l) => idSet.contains(l.id)).toList()),
+      loading: () => const AsyncValue.loading(),
+      error: (e, s) => AsyncValue.error(e, s),
+    ),
+    loading: () => const AsyncValue.loading(),
+    error: (e, s) => AsyncValue.error(e, s),
+  );
+});

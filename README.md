@@ -13,6 +13,7 @@ A Flutter mobile application that helps users discover, explore, and review loca
 - **My Listings** — Create, edit, and delete your own listings.
 - **Reviews & Ratings** — Rate any service with 1–5 stars and leave a comment. Reviews are displayed on both the listing detail page and the global Reviews tab.
 - **Map View** — See all listings as markers on a full-screen Google Map.
+- **Bookmarks** — Save listings as favourites and get back to them anytime from the Saved screen.
 - **Settings** — Manage your profile and notification preferences.
 
 ---
@@ -41,10 +42,18 @@ listings/
 reviews/
   {reviewId}/
     listingId: string
+    listingName: string
+    listingCategory: string
     userId: string
     userName: string
     comment: string
     rating: number
+    createdAt: timestamp
+
+bookmarks/
+  {ownerId}_{listingId}/
+    ownerId: string (uid)
+    listingId: string
     createdAt: timestamp
 ```
 
@@ -60,6 +69,8 @@ This app uses **Riverpod** for state management.
 - `filteredListingsProvider` — Derives filtered listings from search query and selected category state.
 - `searchQueryProvider` — Holds the current search string.
 - `selectedCategoryProvider` — Holds the currently selected category chip.
+- `bookmarkedIdsProvider` — Streams the set of listing IDs the current user has saved.
+- `bookmarkedListingsProvider` — Derives the full saved listings from the bookmark IDs and all listings.
 
 ---
 

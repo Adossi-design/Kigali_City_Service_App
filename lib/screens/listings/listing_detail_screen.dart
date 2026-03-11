@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../models/listing_model.dart';
+import '../../providers/providers.dart';
 import '../../theme/app_theme.dart';
 import '../reviews/add_review_screen.dart';
 
@@ -46,6 +48,43 @@ class ListingDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
+            actions: [
+              // toggles whether this listing is saved by the current user
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final ids = ref.watch(bookmarkedIdsProvider).value ??
+                        const <String>{};
+                    final isSaved = ids.contains(listing.id);
+                    return GestureDetector(
+                      onTap: () async {
+                        final uid = ref.read(authStateProvider).value?.uid;
+                        if (uid == null) return;
+                        final service = ref.read(bookmarkServiceProvider);
+                        if (isSaved) {
+                          await service.removeBookmark(uid, listing.id);
+                        } else {
+                          await service.addBookmark(uid, listing.id);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.navyCard.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: isSaved ? AppTheme.gold : AppTheme.white,
+                          size: 20,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: const BoxDecoration(
