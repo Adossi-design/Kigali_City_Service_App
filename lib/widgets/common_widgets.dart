@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../models/listing_model.dart';
+import '../providers/providers.dart';
 
 // reusable category filter chip used in directory and map screens
 class CategoryChip extends StatelessWidget {
@@ -43,15 +45,17 @@ class CategoryChip extends StatelessWidget {
   }
 }
 
-// reusable listing card shown in the directory and my listings screens
-class ListingCard extends StatelessWidget {
+// reusable listing card shown in the directory and saved listings screens
+class ListingCard extends ConsumerWidget {
   final ListingModel listing;
   final VoidCallback onTap;
 
   const ListingCard({super.key, required this.listing, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSaved =
+        ref.watch(bookmarkedIdsProvider).value?.contains(listing.id) ?? false;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -108,13 +112,36 @@ class ListingCard extends StatelessWidget {
                 ],
               ),
             ),
-            // category label on the right
-            Text(
-              listing.category,
-              style: GoogleFonts.dmSans(
-                fontSize: 11,
-                color: AppTheme.muted,
-              ),
+            // bookmark toggle and category label on the right
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    final uid = ref.read(authStateProvider).value?.uid;
+                    if (uid == null) return;
+                    final service = ref.read(bookmarkServiceProvider);
+                    if (isSaved) {
+                      await service.removeBookmark(uid, listing.id);
+                    } else {
+                      await service.addBookmark(uid, listing.id);
+                    }
+                  },
+                  child: Icon(
+                    isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    color: isSaved ? AppTheme.gold : AppTheme.muted,
+                    size: 18,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  listing.category,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 11,
+                    color: AppTheme.muted,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
